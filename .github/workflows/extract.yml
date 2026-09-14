@@ -1,0 +1,23 @@
+name: Blood Strike Offset Extractor
+on:
+  push:
+    paths:
+      - 'BloodStrikeBinary'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Buscar Funciones Criticas
+        run: |
+          # Filtra el binario buscando comandos de retroceso, renderizado y mapa
+          strings BloodStrikeBinary | grep -iE "recoil|spread|chams|wallhack|renderer|striker|minimap" > offsets_interesantes.txt || true
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Codigos-BloodStrike
+          path: offsets_interesantes.txt
